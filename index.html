@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Required meta tags above-->
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <title>Wreckfest Randomiser</title>
+
+    <!-- Import Jquiery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+    <!-- THE BIT THAT MAKES IT WORK -->
+    <script>
+        // Define for Randomisation
+        var trackList = new Array();
+        var carList = new Array();
+
+
+        // Define & Set variables for display
+        var track = "Pending Randomisation";
+
+        function updateDisplays(){
+            $("#trackDisplay").text(track);
+            $("#classDisplay").text(cars);
+        }
+
+        function shuffle(array) {
+                var currentIndex = array.length, temporaryValue, randomIndex;
+
+                // While there remain elements to shuffle...
+                while (0 !== currentIndex) {
+
+                    // Pick a remaining element...
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex -= 1;
+
+                    // And swap it with the current element.
+                    temporaryValue = array[currentIndex];
+                    array[currentIndex] = array[randomIndex];
+                    array[randomIndex] = temporaryValue;
+                }
+
+                return array;
+        }
+
+
+        // --------------------------------------------
+        // EVENT CODE
+        // --------------------------------------------
+
+        $(document).ready(function() {
+            console.log( "ready!" );
+            updateDisplays();
+
+
+            // --------------------------------------------
+            // Randomise All Button
+            $("#randomiseAll").click(function(event){
+            //console.log("Randomise Clicked");
+
+            // Update & Randomise Tracklist
+            trackList = $.map($('.tracks:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+            shuffle(trackList);
+            //console.log( trackList );
+
+            // Get first item of new track list
+            trackIndex = 0;
+            track = trackList[trackIndex];
+
+            // Update Car List
+            carList = $.map($('.cars:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+
+            // Get random value from Car List
+            var carIndex = Math.floor(Math.random() * carList.length);
+            cars = carList[carIndex];
+
+            updateDisplays();
+            });
+
+            // --------------------------------------------
+            // Randomise Races Button
+            $("#randomiseRace").click(function(event){
+            //console.log("Randomise Clicked");
+
+            // Update & Randomise Tracklist
+            trackList = $.map($('.race:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+            shuffle(trackList);
+            //console.log( trackList );
+
+            // Get first item of new track list
+            trackIndex = 0;
+            track = trackList[trackIndex];
+
+            // Update Car List
+            carList = $.map($('.cars:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+
+            // Get random value from Car List
+            var carIndex = Math.floor(Math.random() * carList.length);
+            cars = carList[carIndex];
+
+            updateDisplays();
+            });
+
+            // --------------------------------------------
+            // Randomise Demolition Button
+            $("#randomiseDemo").click(function(event){
+            //console.log("Randomise Clicked");
+
+            // Update & Randomise Tracklist
+            trackList = $.map($('.demo:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+            shuffle(trackList);
+            //console.log( trackList );
+
+            // Get first item of new track list
+            trackIndex = 0;
+            track = trackList[trackIndex];
+
+            // Update Car List
+            carList = $.map($('.cars:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+
+            // Get random value from Car List
+            var carIndex = Math.floor(Math.random() * carList.length);
+            cars = carList[carIndex];
+
+            updateDisplays();
+            });
+
+
+            // --------------------------------------------
+            // Next Track Button
+            $("#next").click(function(event){
+            //console.log("Next Track Clicked");
+
+            // Increment and get new track from existing tracklist, loop if end of array is exceeded
+            trackIndex++;
+            if( trackIndex >= trackList.length ) {trackIndex=0;};
+            track = trackList[trackIndex];
+
+            // Update Car List
+            carList = $.map($('.cars:checkbox:checked'),function(e,i){
+                return e.value;
+            });
+
+            // Get random value from Car List
+            var carIndex = Math.floor(Math.random() * carList.length);
+            cars = carList[carIndex];
+
+            updateDisplays();
+            });
+
+            // --------------------------------------------
+            // Master Toggles
+
+            $(".gMaster").change(function(){
+                var checked = $(this).is(":checked");
+                var group = $(this).attr("id");
+                if (checked){
+                    $(".g"+group).each(function(){
+                        $(this).prop("checked", true)
+                    });
+                }else{
+                    $(".g"+group).each(function(){
+                    $(this).prop("checked", false);
+                    });
+                }
+
+            });
+
+        });
+
+
+        // --------------------------------------------
+        // END OF EVENT CODE
+        // --------------------------------------------
+
+
+    </script>
+
+  </head>
+  <body>
+    <!-- Header Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col align-self-center">
+                <h1>Wreckfest Randomiser</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col align-self-center">
+                <p>For creating random races for Wreckfest lobbies.
+                  Turn tracks on and off using the settings,
+                  then generate a random list of races, demolition, or a mix.
+                  Use the <code>NEXT TRACK</code> button to load the next track
+                  in your selected list (if you want to avoid repeats),
+                  or continue using the random buttons for a fully random experience.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="container">
+        <div class="row gy-2 gx-6 align-items-start">
+            <div class="d-grid col-12 col-md-4 mx-auto">
+                <button class="btn btn-outline-success py-3" id="randomiseRace">Random Race</button>
+            </div>
+            <div class="d-grid col-12 col-md-4 mx-auto">
+                <button class="btn btn-outline-warning py-3" id="randomiseDemo">Random Demolition</button>
+            </div>
+            <div class="d-grid col-12 col-md-4 mx-auto">
+                <button class="btn btn-outline-danger py-3" id="randomiseAll">Random All</button>
+            </div>
+            <div class="d-grid col-12 mx-auto">
+                <button class="btn btn-primary py-3" id="next">Next Track</button>
+            </div>
+        </div>
+        <div class="row gy-2 justify-content-center mt-5">
+            <div class="col-auto">
+                <figure class="text-center"><h1 class="display-4" id="trackDisplay">TRACK</h1></figure>
+            </div>
+        </div>
+        <div class="row gy-2 gx-6 align-items-start justify-content-center">
+            <div class="col-auto">
+                <p class="lead" id="classDisplay">Class</p>
+            </div>
+        </div>
+    </div>
+
+      <!-- Selection Section -->
+      <div class="container mt-5">
+        <div class="accordion accordion-flush" id="accordionFlush">
+            <!-- TRACKS -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Tracks
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                    data-bs-parent="#accordionFlush">
+                    <div class="accordion-body">
+
+                      <!-- https://wreckfest.fandom.com/wiki/Category:Tracks -->
+
+                        <form class="form-inline form-check form-switch"><div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4">
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Big Valley Speedway
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="speedway2_classic_arena" name="track" value="Big Valley Speedway - Open Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="speedway2_classic_arena">Open Demolition Arena</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="speedway2_demolition_arena" name="track" value="Big Valley Speedway - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="speedway2_demolition_arena">Demolition Arena</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="speedway2_figure_8" name="track" value="Big Valley Speedway - Figure 8"
+                                    checked />
+                                <label class="form-check-label" for="speedway2_figure_8">Figure 8</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="speedway2_inner_oval" name="track" value="Big Valley Speedway - Inner Oval"
+                                    checked />
+                                <label class="form-check-label" for="speedway2_inner_oval">Inner Oval</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="speedway2_outer_oval" name="track" value="Big Valley Speedway - Outer Oval"
+                                    checked />
+                                <label class="form-check-label" for="speedway2_outer_oval">Outer Oval</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="speedway2_oval_loop" name="track" value="Big Valley Speedway - Outer Oval Loop"
+                                    checked />
+                                <label class="form-check-label" for="speedway2_oval_loop">Outer Oval Loop</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Bleak City
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="crm01_1" name="track" value="Bleak City - Race Track" checked
+                                />
+                                <label class="form-check-label" for="crm01_1">Race Track</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="crm01_2" name="track" value="Bleak City - Free Roam" checked
+                                />
+                                <label class="form-check-label" for="crm01_2">Free Roam</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="crm01_3" name="track" value="Bleak City - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="crm01_3">Demolition Arena</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="crm01_5" name="track" value="Bleak City - Race Track Reverse"
+                                    checked />
+                                <label class="form-check-label" for="crm01_5">Race Track Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Bloomfield Speedway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="dirt_speedway_dirt_oval" name="track" value="Bloomfield Speedway - Dirt Oval"
+                                    checked />
+                                <label class="form-check-label" for="dirt_speedway_dirt_oval">Dirt Oval</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="dirt_speedway_figure_8" name="track" value="Bloomfield Speedway - Figure 8"
+                                    checked />
+                                <label class="form-check-label" for="dirt_speedway_figure_8">Figure 8</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Bonebreaker Valley
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="bonebreaker_valley_main_circuit" name="track" value="Bonebreaker Valley - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="bonebreaker_valley_main_circuit">Main Circuit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Boulder Bank Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit3_long_loop" name="track" value="Boulder Bank Circuit - Main Route"
+                                    checked />
+                                <label class="form-check-label" for="sandpit3_long_loop">Main Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit3_long_loop_rev" name="track" value="Boulder Bank Circuit - Main Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit3_long_loop_rev">Main Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit3_short_loop" name="track" value="Boulder Bank Circuit - Short Route"
+                                    checked />
+                                <label class="form-check-label" for="sandpit3_short_loop">Short Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit3_short_loop_rev" name="track" value="Boulder Bank Circuit - Short Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit3_short_loop_rev">Short Route Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Clayridge Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed9_r1" name="track" value="Clayridge Circuit - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed9_r1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed9_r1_rev" name="track" value="Clayridge Circuit - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed9_r1_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Crash Canyon
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="crash_canyon_main_circuit" name="track" value="Crash Canyon - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="crash_canyon_main_circuit">Main Circuit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Deathloop
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="loop" name="track" value="Deathloop - Main Circuit" checked
+                                />
+                                <label class="form-check-label" for="loop">Main Circuit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Devil's Canyon
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="crm02_1" name="track" value="Devil's Canyon - Race Track"
+                                    checked />
+                                <label class="form-check-label" for="crm02_1">Race Track</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="crm02_2" name="track" value="Devil's Canyon - Free Roam"
+                                    checked />
+                                <label class="form-check-label" for="crm02_2">Free Roam</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Dirt Devil Stadium
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="triangle_r1" name="track" value="Dirt Devil Stadium - Dirt Speedway"
+                                    checked />
+                                <label class="form-check-label" for="triangle_r1">Dirt Speedway</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="triangle_r2" name="track" value="Dirt Devil Stadium - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="triangle_r2">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Drytown Desert Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields08_1" name="track" value="Drytown Desert Circuit - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="fields08_1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields08_1_rev" name="track" value="Drytown Desert Circuit - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="fields08_1_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Eagles Peak Motorpark
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields13_1" name="track" value="Eagles Peak Motorpark - Racing Track"
+                                    checked />
+                                <label class="form-check-label" for="fields13_1">Racing Track</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields13_1_rev" name="track" value="Eagles Peak Motorpark - Racing Track Reverse"
+                                    checked />
+                                <label class="form-check-label" for="fields13_1_rev">Racing Track Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="fields13_2" name="track" value="Eagles Peak Motorpark - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="fields13_2">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Espedalen Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac3_main_circuit" name="track" value="Espedalen Raceway - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="tarmac3_main_circuit">Main Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac3_main_circuit_rev" name="track" value="Espedalen Raceway - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="tarmac3_main_circuit_rev">Main Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac3_short_circuit" name="track" value="Espedalen Raceway - Short Circuit"
+                                    checked />
+                                <label class="form-check-label" for="tarmac3_short_circuit">Short Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac3_short_circuit_rev" name="track" value="Espedalen Raceway - Short Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="tarmac3_short_circuit_rev">Short Route Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Fairfield County
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="smallstadium_demolition_arena" name="track" value="Fairfield County - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="smallstadium_demolition_arena">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Fairfield Grass Field
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="grass_arena_demolition_arena" name="track" value="Fairfield Grass Field - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="grass_arena_demolition_arena">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Fairfield Mud Pit
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="mudpit_demolition_arena" name="track" value="Fairfield Mud Pit - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="mudpit_demolition_arena">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    FinnCross Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed1_main_circuit" name="track" value="FinnCross Circuit - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed1_main_circuit">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed1_main_circuit_rev" name="track" value="FinnCross Circuit - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed1_main_circuit_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Fire Rock Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac1_main_circuit" name="track" value="Fire Rock Raceway - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="tarmac1_main_circuit">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac1_main_circuit_rev" name="track" value="Fire Rock Raceway - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="tarmac1_main_circuit_rev">Main Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac1_short_circuit" name="track" value="Fire Rock Raceway - Short Circuit"
+                                    checked />
+                                <label class="form-check-label" for="tarmac1_short_circuit">Short Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac1_short_circuit_rev" name="track" value="Fire Rock Raceway - Short Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="tarmac1_short_circuit_rev">Short Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Firwood Motocenter
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed7_r1" name="track" value="Firwood Motocenter - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed7_r1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed7_r1_rev" name="track" value="Firwood Motocenter - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed7_r1_rev">Main Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed7_r3" name="track" value="Firwood Motocenter - Short Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed7_r3">Short Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed7_r3_rev" name="track" value="Firwood Motocenter - Short Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed7_r3_rev">Short Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Glendale Countryside
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="field_derby_arena" name="track" value="Glendale Countryside - Field Arena"
+                                    checked />
+                                <label class="form-check-label" for="field_derby_arena">Field Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Hellride
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="urban06" name="track" value="Hellride - Main Circuit" checked
+                                />
+                                <label class="form-check-label" for="urban06">Main Circuit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Hillstreet Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="urban08_1" name="track" value="Hillstreet Circuit - Race Track"
+                                    checked />
+                                <label class="form-check-label" for="urban08_1">Race Track</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="urban08_1_rev" name="track" value="Hillstreet Circuit - Race Track Reverse"
+                                    checked />
+                                <label class="form-check-label" for="urban08_1_rev">Race Track Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Hilltop Stadium
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="speedway1_figure_8" name="track" value="Hilltop Stadium - Figure 8"
+                                    checked />
+                                <label class="form-check-label" for="speedway1_figure_8">Figure 8</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="speedway1_oval" name="track" value="Hilltop Stadium - Oval"
+                                    checked />
+                                <label class="form-check-label" for="speedway1_oval">Oval</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Kingston Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields12_1" name="track" value="Kingston Raceway - Asphalt Oval"
+                                    checked />
+                                <label class="form-check-label" for="fields12_1">Asphalt Oval</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields12_1_rev" name="track" value="Kingston Raceway - Asphalt Oval Reverse"
+                                    checked />
+                                <label class="form-check-label" for="fields12_1_rev">Asphalt Oval Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields12_2" name="track" value="Kingston Raceway - Figure 8"
+                                    checked />
+                                <label class="form-check-label" for="fields12_2">Figure 8</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Maasten Motocenter
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed2_main_circuit" name="track" value="Maasten Motocenter - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed2_main_circuit">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed2_main_circuit_rev" name="track" value="Maasten Motocenter - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed2_main_circuit_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Madman Stadium
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="bigstadium_demolition_arena" name="track" value="Madman Stadium - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="bigstadium_demolition_arena">Demolition Arena</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="bigstadium_figure_8" name="track" value="Madman Stadium - Figure 8"
+                                    checked />
+                                <label class="form-check-label" for="bigstadium_figure_8">Figure 8</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Midwest Motocenter
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="gravel1_main_loop" name="track" value="Midwest Motocenter - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="gravel1_main_loop">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="gravel1_main_loop_rev" name="track" value="Midwest Motocenter - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="gravel1_main_loop_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Motorcity Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac2_main_circuit" name="track" value="Motorcity Circuit - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="tarmac2_main_circuit">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac2_main_circuit_rev" name="track" value="Motorcity Circuit - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="tarmac2_main_circuit_rev">Main Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="tarmac2_main_circuit_tourney" name="track" value="Motorcity Circuit - Trophy Circuit"
+                                />
+                                <label class="form-check-label" for="tarmac2_main_circuit_tourney">Trophy Circuit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Mudford Motorpark
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields10_1" name="track" value="Mudford Motorpark - Mud Oval"
+                                    checked />
+                                <label class="form-check-label" for="fields10_1">Mud Oval</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="fields10_2" name="track" value="Mudford Motorpark - Mud Pit"
+                                    checked />
+                                <label class="form-check-label" for="fields10_2">Mud Pit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Northfolk Ring
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed8_r1" name="track" value="Northfolk Ring - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed8_r1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed8_r2" name="track" value="Northfolk Ring - Open Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed8_r2">Open Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed8_r3_rev" name="track" value="Northfolk Ring - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed8_r3_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Northland Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed5_outer_loop" name="track" value="Northland Raceway - Outer Route"
+                                    checked />
+                                <label class="form-check-label" for="mixed5_outer_loop">Outer Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed5_outer_loop_rev" name="track" value="Northland Raceway - Outer Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed5_outer_loop_rev">Outer Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed5_inner_loop" name="track" value="Northland Raceway - Inner Route"
+                                    checked />
+                                <label class="form-check-label" for="mixed5_inner_loop">Inner Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed5_inner_loop_rev" name="track" value="Northland Raceway - Inner Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed5_inner_loop_rev">Inner Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed5_free_route" name="track" value="Northland Raceway - Free Route"
+                                    checked />
+                                <label class="form-check-label" for="mixed5_free_route">Free Route</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Pinehills Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed3_long_loop" name="track" value="Pinehills Raceway - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed3_long_loop">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed3_long_loop_rev" name="track" value="Pinehills Raceway - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed3_long_loop_rev">Main Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed3_r3" name="track" value="Pinehills Raceway - Rally Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed3_r3">Rally Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed3_r3_rev" name="track" value="Pinehills Raceway - Rally Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed3_r3_rev">Rally Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed3_short_loop" name="track" value="Pinehills Raceway - Short Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed3_short_loop">Short Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed3_short_loop_rev" name="track" value="Pinehills Raceway - Short Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed3_short_loop_rev">Short Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Rattlesnake Racepark
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields14_1" name="track" value="Rattlesnake Racepark - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="fields14_1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields14_2" name="track" value="Rattlesnake Racepark - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="fields14_2">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Rockfield Roughspot
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="fields09_1" name="track" value="Rockfield Roughspot - Dirt Oval"
+                                    checked />
+                                <label class="form-check-label" for="fields09_1">Dirt Oval</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Rosenheim Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed4_main_circuit" name="track" value="Rosenheim Raceway - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="mixed4_main_circuit">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="mixed4_main_circuit_rev" name="track" value="Rosenheim Raceway - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="mixed4_main_circuit_rev">Main Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Sandstone Raceway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit1_long_loop" name="track" value="Sandstone Raceway - Main Route"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_long_loop">Main Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit1_long_loop_rev" name="track" value="Sandstone Raceway - Main Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_long_loop_rev">Main Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit1_short_loop" name="track" value="Sandstone Raceway - Short Route"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_short_loop">Short Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit1_short_loop_rev" name="track" value="Sandstone Raceway - Short Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_short_loop_rev">Short Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit1_alt_loop" name="track" value="Sandstone Raceway - Alt Route"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_alt_loop">Alt Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit1_alt_loop_rev" name="track" value="Sandstone Raceway - Alt Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_alt_loop_rev">Alt Route Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Savolax Sandpit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit2_full_circuit" name="track" value="Savolax Sandpit - Main Route"
+                                    checked />
+                                <label class="form-check-label" for="sandpit2_full_circuit">Main Route</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit2_full_circuit_rev" name="track" value="Savolax Sandpit - Main Route Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit2_full_circuit_rev">Main Route Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit2_2" name="track" value="Savolax Sandpit - Short Circuit"
+                                    checked />
+                                <label class="form-check-label" for="sandpit1_short_loop">Short Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="sandpit2_2_rev" name="track" value="Savolax Sandpit - Short Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="sandpit2_2_rev">Short Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    The Maw
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="fields11_1" name="track" value="The Maw - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="fields11_1">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Thunderbowl
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="urban07" name="track" value="Thunderbowl - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="urban07">Demolition Arena</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Tribend Speedway
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest12_1" name="track" value="Tribend Speedway - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="forest12_1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest12_1_rev" name="track" value="Tribend Speedway - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="forest12_1_rev">Main Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest12_2" name="track" value="Tribend Speedway - Wild Circuit"
+                                    checked />
+                                <label class="form-check-label" for="forest12_2">Wild Circuit</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Vale Falls Circuit
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest11_1" name="track" value="Vale Falls Circuit - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="forest11_1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest11_1_rev" name="track" value="Vale Falls Circuit - Main Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="forest11_1_rev">Main Circuit Reverse</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest11_2" name="track" value="Vale Falls Circuit - Short Circuit"
+                                    checked />
+                                <label class="form-check-label" for="forest11_2">Short Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks race" type="checkbox" id="forest11_2_rev" name="track" value="Vale Falls Circuit - Short Circuit Reverse"
+                                    checked />
+                                <label class="form-check-label" for="forest11_2_rev">Short Circuit Reverse</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Wrecking Playground
+                                </h5>
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="wrecker01_1" name="track" value="Wrecking Playground - Main Area"
+                                    checked />
+                                <label class="form-check-label" for="wrecker01_1">Main Area</label>
+
+
+
+                            </div>
+                            <div class="form-group col">
+                                <h5 class="fw-lighter">
+                                    Wrecknado
+                                </h5>
+
+                                <input class="form-check-input tracks race" type="checkbox" id="urban09_1" name="track" value="Wrecknado - Main Circuit"
+                                    checked />
+                                <label class="form-check-label" for="urban09_1">Main Circuit</label>
+                                <br />
+
+                                <input class="form-check-input tracks demo" type="checkbox" id="urban09_2" name="track" value="Wrecknado - Demolition Arena"
+                                    checked />
+                                <label class="form-check-label" for="urban09_2">Demolition Arena</label>
+
+
+                            </div></div><!-- End of Row -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- CAR CATOGORIES -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                  Car Classes
+                </button>
+              </h2>
+              <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlush">
+                <div class="accordion-body">
+
+                    <form>
+                        <fieldset>
+                            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6">
+                                <div class="col carSection form-check form-switch">
+                                    <input class="form-check-input cars"
+                                      type="checkbox"
+                                      id="carGroup1"
+                                      name="Class D"
+                                      value="Class D"
+                                      checked
+                                    />
+                                    <Label class="form-check-label" for="carGroup1">Class D</Label>
+                                </div>
+
+                                <div class="col carSection form-check form-switch">
+                                    <input class="form-check-input cars"
+                                      type="checkbox"
+                                      id="carGroup1"
+                                      name="Class C"
+                                      value="Class C"
+                                      checked
+                                    />
+                                    <Label class="form-check-label" for="carGroup1">Class C</Label>
+                                </div>
+
+                                <div class="col carSection form-check form-switch">
+                                    <input class="form-check-input cars"
+                                      type="checkbox"
+                                      id="carGroup1"
+                                      name="Class B"
+                                      value="Class B"
+                                      checked
+                                    />
+                                    <Label class="form-check-label" for="carGroup1">Class B</Label>
+                                </div>
+
+                                <div class="col carSection form-check form-switch">
+                                    <input class="form-check-input cars"
+                                      type="checkbox"
+                                      id="carGroup1"
+                                      name="Class A"
+                                      value="Class A"
+                                      checked
+                                    />
+                                    <Label class="form-check-label" for="carGroup1">Class A</Label>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+
+
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+  </body>
+</html>
